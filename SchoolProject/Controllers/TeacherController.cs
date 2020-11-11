@@ -24,7 +24,7 @@ namespace SchoolProject.Controllers
             return View(Teachers);
         }
 
-        //GET : /Teacher/Show
+        //GET : /Teacher/Show/{id} -> /Teacher/Show/1
         public ActionResult Show(int id)
         {
             TeacherDataController controller = new TeacherDataController();
