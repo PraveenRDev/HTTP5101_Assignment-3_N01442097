@@ -1,0 +1,41 @@
+﻿@model SchoolProject.Models.Teacher
+@{
+    ViewBag.Title = "Show";
+}
+
+<h2>Teacher Information</h2>
+<a href="/Teacher/List" class="btn-link">Go Back</a>
+<div class="teacher-info-container">
+    @if (Model.TeacherId == 0)
+    {
+        <div class="no-results">No information found about the teacher</div>
+    }
+    else
+    {
+        <h3 class="teacher-name">@Model.TeacherFname @Model.TeacherLName</h3>
+        <div class="field-group br-btm">
+            <div>Employee Number:  @Model.EmployeeNumber</div>
+            <div>Hire Date: @Model.HireDate</div>
+            <div>Salary: CAD $@Model.Salary </div>
+        </div>
+        <div class="field-group">
+            <h4 class="sub-heading">Classes</h4>
+            @if (Model.Classes.Count == 0)
+            {
+                <div class="no-results">No any classes assigned</div>
+            }
+            else
+            {
+                <ul>
+                    @foreach (SchoolProject.Models.Class classInfo in Model.Classes)
+                    {
+                        <li class="class-group">
+                            <div class="class-name"> @classInfo.ClassName (@classInfo.ClassCode)</div>
+                            <div>From: @classInfo.StartDate.ToString("dd-MMM-yyyy") &nbsp To: @classInfo.FinishDate.ToString("dd-MMM-yyyy")</div>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    }
+</div>
