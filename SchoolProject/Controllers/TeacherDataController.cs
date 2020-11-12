@@ -9,7 +9,7 @@ using System.Web.Http;
 
 namespace SchoolProject.Controllers
 {
-
+    // REFERENCE :- AUTHOR: CHRISTINE BRITTLE | SOURCE: https://github.com/christinebittle/BlogProject_1 | 
     public class TeacherDataController : ApiController
     {
         // The database context class to access MySQL school Database.
