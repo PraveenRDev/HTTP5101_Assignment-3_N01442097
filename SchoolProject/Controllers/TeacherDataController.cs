@@ -252,7 +252,7 @@ namespace SchoolProject.Controllers
         }
 
         /// <summary>
-        /// Update deleted teacher's classes to null, in other words remove classes of deleted teacher
+        /// Update deleted teacher's classes to null. in other words, remove associations between deleted teacher and their classes
         /// </summary>
         /// <param name="id">The (deleted) Teacher ID</param>
         /// <example>api/TeacherDataController/RemoveTeacherClasses/6</example>
