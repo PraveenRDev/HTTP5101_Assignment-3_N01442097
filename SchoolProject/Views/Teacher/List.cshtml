@@ -5,10 +5,13 @@
 }
 
 <h2>Teachers List</h2>
+<nav>
+    <a href="/Teacher/Add" class="btn-link">Add New Teacher</a>
+</nav>
 <p>A List of all teachers - click on a teacher's name to view more information about them</p>
 <ol>
     @foreach (SchoolProject.Models.Teacher teacher in Model)
     {
-        <li><a href="/Teacher/Show/@teacher.TeacherId">@teacher.TeacherFname @teacher.TeacherLName</a></li>
+        <li><a href="/Teacher/Show/@teacher.TeacherId">@teacher.TeacherFname @teacher.TeacherLname</a></li>
     }
 </ol>
