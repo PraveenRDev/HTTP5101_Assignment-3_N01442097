@@ -4,7 +4,10 @@
 }
 
 <h2>Teacher Information</h2>
-<a href="/Teacher/List" class="btn-link">Go Back</a>
+<nav>
+    <a href="/Teacher/List" class="btn-link">All Teachers</a>
+    <a class="btn-link" href="/Teacher/DeleteConfirm/@Model.TeacherId">Delete</a>
+</nav>
 <div class="teacher-info-container">
     @if (Model.TeacherId == 0)
     {
@@ -12,7 +15,7 @@
     }
     else
     {
-        <h3 class="teacher-name">@Model.TeacherFname @Model.TeacherLName</h3>
+        <h3 class="teacher-name">@Model.TeacherFname @Model.TeacherLname</h3>
         <div class="field-group br-btm">
             <div>Employee Number:  @Model.EmployeeNumber</div>
             <div>Hire Date: @Model.HireDate</div>

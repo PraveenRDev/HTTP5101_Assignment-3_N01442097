@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "DeleteConfirm";
+}
+
+<h2>Confirm Delete</h2>
+<nav>
+    <a href="/Teacher/Show/@Model.TeacherId" class="btn-link">Cancel</a>
+</nav>
+<h2>Are you sure you want to delete @Model.TeacherFname @Model.TeacherLname</h2>
+<p>This action cannot be undone.</p>
+@if (Model.Classes.Count > 0)
+{
+<p>Deleting @Model.TeacherFname @Model.TeacherLname, will also remove him/her from the following classes</p>
+<ul>
+    @foreach (SchoolProject.Models.Class classInfo in Model.Classes)
+    {
+        <li class="class-group">
+            <div class="class-name"> @classInfo.ClassName (@classInfo.ClassCode)</div>
+            <div>From: @classInfo.StartDate.ToString("dd-MMM-yyyy") &nbsp To: @classInfo.FinishDate.ToString("dd-MMM-yyyy")</div>
+        </li>
+    }
+</ul>
+}
+
+<form method="POST" action="/Teacher/Delete/?teacherId=@Model.TeacherId&classCount=@Model.Classes.Count">
+    <input type="submit" value="Confirm Delete" />
+</form>

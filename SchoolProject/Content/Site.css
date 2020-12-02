@@ -48,10 +48,46 @@ li {
     list-style-type: circle;
 }
 
-.btn-link{
+.btn-link {
+    border-radius: 1em;
     font-weight: 500;
+    display: block;
+    background-color: lightblue;
+    padding: 0.5em 1em;
+    width: fit-content;
+    color: white;
+    margin: 2em 0;
+    letter-spacing: 0.1em;
+    margin-right: 3em;
+}
+
+.btn-link:hover {
+    background-color: lightblue;
+    color: white;
 }
 
 .no-results {
     margin: 30px 60px;
+}
+
+input {
+    display: block;
+    width: 50em;
+    padding: 0.2em;
+    border: 1px solid cadetblue;
+}
+
+.input-group {
+    margin: 1em 0;
+}
+
+input[type=submit] {
+    background-color: cadetblue;
+    color: white;
+    width: 12.5em;
+    padding: 0.4em 0.7em;
+}
+
+nav{
+    display: flex
 }

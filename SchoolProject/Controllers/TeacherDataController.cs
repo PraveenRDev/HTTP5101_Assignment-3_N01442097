@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Diagnostics;
 
 namespace SchoolProject.Controllers
 {
@@ -49,7 +50,7 @@ namespace SchoolProject.Controllers
             {
                 // Access column information by the DB column name as an index
                 string TeacherFname = (string)ResultSet["teacherfname"];
-                string TeacherLName = (string)ResultSet["teacherlname"];
+                string TeacherLname = (string)ResultSet["teacherlname"];
                 int TeacherId = (int)ResultSet["teacherid"];
 
                 // Create a newTeacher instance from Teacher
@@ -57,7 +58,7 @@ namespace SchoolProject.Controllers
 
                 // Fill newTeacher with appropriate properties
                 newTeacher.TeacherFname = TeacherFname;
-                newTeacher.TeacherLName = TeacherLName;
+                newTeacher.TeacherLname = TeacherLname;
                 newTeacher.TeacherId = TeacherId;
 
                 // Add newTeacher to the Teachers List
@@ -106,13 +107,13 @@ namespace SchoolProject.Controllers
                 DateTime HireDate = (DateTime)ResultSet["hiredate"];
                 decimal Salary = (decimal)ResultSet["salary"];
                 string TeacherFname = (string)ResultSet["teacherfname"];
-                string TeacherLName = (string)ResultSet["teacherlname"];
+                string TeacherLname = (string)ResultSet["teacherlname"];
                 int TeacherId = (int)ResultSet["teacherid"];
 
                 // Fill newTeacher with appropriate properties
                 newTeacher.EmployeeNumber = EmployeeNumber;
                 newTeacher.TeacherFname = TeacherFname;
-                newTeacher.TeacherLName = TeacherLName;
+                newTeacher.TeacherLname = TeacherLname;
                 newTeacher.TeacherId = TeacherId;
                 newTeacher.HireDate = HireDate;
                 newTeacher.Salary = Salary;
@@ -182,5 +183,100 @@ namespace SchoolProject.Controllers
             return Classes;
         }
 
+        /// <summary>
+        /// Add a new Teacher to the MySQL school Database.
+        /// </summary>
+        /// <param name="newTeacher">An Object with fields tha map to the columns of the Teacher's Table</param>
+        /// <returns>Created Teacher ID to redirect to the created teacher's profile</returns>
+        /// <example>api/TeacherDataController/AddTeacher -> 15(id is obtained from db)</example>
+        /// <example>api/TeacherDataController/AddTeacher -> 16</example>
+        [HttpPost]
+        [Route("api/TeacherDataController/AddTeacher")]
+        public int AddTeacher(Teacher newTeacher)
+        {
+            // Create an instance of a db connection
+            MySqlConnection Conn = School.AccessDatabase();
+
+            // Open/Associate a connection between the web server and the db
+            Conn.Open();
+
+            //Establish a new command (query) for our database
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            // SQL Query - insert particular teacher record to teachers table
+            cmd.CommandText = "INSERT INTO teachers (teacherfname, teacherlname, employeenumber, hiredate, salary) VALUES (@TeacherFname, @TeacherLname, @EmployeeNumber, @HireDate, @Salary); SELECT LAST_INSERT_ID()";
+            cmd.Parameters.AddWithValue("@TeacherFname", newTeacher.TeacherFname);
+            cmd.Parameters.AddWithValue("@TeacherLname", newTeacher.TeacherLname);
+            cmd.Parameters.AddWithValue("@EmployeeNumber", newTeacher.EmployeeNumber);
+            cmd.Parameters.AddWithValue("@HireDate", newTeacher.HireDate);
+            cmd.Parameters.AddWithValue("@Salary", newTeacher.Salary);
+            cmd.Prepare();
+
+            // GET the teacher ID that's inserted
+            int insertedTeacherId = Convert.ToInt32(cmd.ExecuteScalar());
+            
+            // After reading the ResultSet close connection
+            Conn.Close();
+
+            // return teacherId, to redirect to the created teacher's profile
+            return insertedTeacherId;
+        }
+
+        /// <summary>
+        /// Delete a teacher from the MySQL school database through an id(of teacher).
+        /// </summary>
+        /// <param name="id">The Teacher ID</param>
+        /// <example>api/TeacherDataController/DeleteTeacher/5</example>
+        [HttpPost]
+        [Route("api/TeacherDataController/DeleteTeacher")]
+        public void DeleteTeacher(int id)
+        {
+            // Create an instance of a db connection
+            MySqlConnection Conn = School.AccessDatabase();
+
+            // Open/Associate a connection between the web server and the db
+            Conn.Open();
+
+            //Establish a new command (query) for our database
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            // SQL Query - delete particular teacher record from teachers table
+            cmd.CommandText = "DELETE FROM teachers WHERE teacherid=@id";
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Prepare();
+
+            cmd.ExecuteNonQuery();
+
+            // After reading the ResultSet close connection
+            Conn.Close();
+        }
+
+        /// <summary>
+        /// Update deleted teacher's classes to null, in other words remove classes of deleted teacher
+        /// </summary>
+        /// <param name="id">The (deleted) Teacher ID</param>
+        /// <example>api/TeacherDataController/RemoveTeacherClasses/6</example>
+        [HttpPost]
+        [Route("api/TeacherDataController/RemoveTeacherClasses")]
+        public void RemoveTeacherClasses(int id) {
+            // Create an instance of a db connection
+            MySqlConnection Conn = School.AccessDatabase();
+
+            // Open/Associate a connection between the web server and the db
+            Conn.Open();
+
+            //Establish a new command (query) for our database
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            // SQL Query - Update the deleted teacher's classes to null
+            cmd.CommandText = "UPDATE classes SET teacherid = null WHERE teacherid=@id";
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Prepare();
+
+            cmd.ExecuteNonQuery();
+
+            // After reading the ResultSet close connection
+            Conn.Close();
+        }
     }
 }
