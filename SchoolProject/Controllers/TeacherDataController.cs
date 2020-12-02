@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace SchoolProject.Controllers
 {
-    // REFERENCE :- AUTHOR: CHRISTINE BRITTLE | SOURCE: https://github.com/christinebittle/BlogProject_1 | 
+    // REFERENCE :- AUTHOR: CHRISTINE BRITTLE | SOURCE: https://github.com/christinebittle/BlogProject_5 | 
     public class TeacherDataController : ApiController
     {
         // The database context class to access MySQL school Database.
@@ -214,8 +214,8 @@ namespace SchoolProject.Controllers
 
             // GET the teacher ID that's inserted
             int insertedTeacherId = Convert.ToInt32(cmd.ExecuteScalar());
-            
-            // After reading the ResultSet close connection
+
+            // close db connection
             Conn.Close();
 
             // return teacherId, to redirect to the created teacher's profile
@@ -247,12 +247,12 @@ namespace SchoolProject.Controllers
 
             cmd.ExecuteNonQuery();
 
-            // After reading the ResultSet close connection
+            // close db connection
             Conn.Close();
         }
 
         /// <summary>
-        /// Update deleted teacher's classes to null, in other words remove classes of deleted teacher
+        /// Update deleted teacher's classes to null. in other words, remove associations between deleted teacher and their classes
         /// </summary>
         /// <param name="id">The (deleted) Teacher ID</param>
         /// <example>api/TeacherDataController/RemoveTeacherClasses/6</example>
@@ -275,7 +275,7 @@ namespace SchoolProject.Controllers
 
             cmd.ExecuteNonQuery();
 
-            // After reading the ResultSet close connection
+            // close db connection
             Conn.Close();
         }
     }

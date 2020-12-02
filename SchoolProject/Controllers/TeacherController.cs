@@ -72,7 +72,7 @@ namespace SchoolProject.Controllers
             return View(teacher);
         }
 
-        //POST : /Teacher/Delete/{teacherId}/{classCount}
+        //POST : /Teacher/Delete/?teacherId={teacherId}&classCount={classCount}
         [HttpPost]
         public ActionResult Delete(int teacherId, int classCount)
         {
