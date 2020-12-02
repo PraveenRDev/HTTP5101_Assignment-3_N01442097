@@ -214,8 +214,8 @@ namespace SchoolProject.Controllers
 
             // GET the teacher ID that's inserted
             int insertedTeacherId = Convert.ToInt32(cmd.ExecuteScalar());
-            
-            // After reading the ResultSet close connection
+
+            // close db connection
             Conn.Close();
 
             // return teacherId, to redirect to the created teacher's profile
@@ -247,7 +247,7 @@ namespace SchoolProject.Controllers
 
             cmd.ExecuteNonQuery();
 
-            // After reading the ResultSet close connection
+            // close db connection
             Conn.Close();
         }
 
@@ -275,7 +275,7 @@ namespace SchoolProject.Controllers
 
             cmd.ExecuteNonQuery();
 
-            // After reading the ResultSet close connection
+            // close db connection
             Conn.Close();
         }
     }
