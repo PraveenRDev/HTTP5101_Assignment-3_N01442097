@@ -92,7 +92,9 @@ namespace SchoolProject.Controllers
             MySqlCommand cmd = Conn.CreateCommand();
 
             // SQL Query - filter a particular teacher
-            cmd.CommandText = $"SELECT * FROM `teachers` WHERE teacherid={id}";
+            cmd.CommandText = "SELECT * FROM `teachers` WHERE teacherid=@id";
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Prepare();
 
             //Gather Result Set of Query into a variable
             MySqlDataReader ResultSet = cmd.ExecuteReader();
@@ -146,7 +148,9 @@ namespace SchoolProject.Controllers
             MySqlCommand cmd = Conn.CreateCommand();
 
             // SQL Query - select all courses of a particular teacher
-            cmd.CommandText = $"SELECT * FROM `classes` WHERE teacherid={id}";
+            cmd.CommandText = "SELECT * FROM `classes` WHERE teacherid=@id";
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Prepare();
 
             //Gather Result Set of Query into a variable
             MySqlDataReader ResultSet = cmd.ExecuteReader();
@@ -186,40 +190,47 @@ namespace SchoolProject.Controllers
         /// <summary>
         /// Add a new Teacher to the MySQL school Database.
         /// </summary>
-        /// <param name="newTeacher">An Object with fields tha map to the columns of the Teacher's Table</param>
+        /// <param name="newTeacher">An Object with fields that map to the columns of the Teacher's Table</param>
         /// <returns>Created Teacher ID to redirect to the created teacher's profile</returns>
         /// <example>api/TeacherDataController/AddTeacher -> 15(id is obtained from db)</example>
         /// <example>api/TeacherDataController/AddTeacher -> 16</example>
+        /// <example>api/TeacherDataController/AddTeacher -> 0 -> 0 is an invalid ID, so it means server validation error in this case</example>
         [HttpPost]
         [Route("api/TeacherDataController/AddTeacher")]
         public int AddTeacher(Teacher newTeacher)
         {
-            // Create an instance of a db connection
-            MySqlConnection Conn = School.AccessDatabase();
+            if (ModelState.IsValid)
+            {
+                // Create an instance of a db connection
+                MySqlConnection Conn = School.AccessDatabase();
 
-            // Open/Associate a connection between the web server and the db
-            Conn.Open();
+                // Open/Associate a connection between the web server and the db
+                Conn.Open();
 
-            //Establish a new command (query) for our database
-            MySqlCommand cmd = Conn.CreateCommand();
+                //Establish a new command (query) for our database
+                MySqlCommand cmd = Conn.CreateCommand();
 
-            // SQL Query - insert particular teacher record to teachers table
-            cmd.CommandText = "INSERT INTO teachers (teacherfname, teacherlname, employeenumber, hiredate, salary) VALUES (@TeacherFname, @TeacherLname, @EmployeeNumber, @HireDate, @Salary); SELECT LAST_INSERT_ID()";
-            cmd.Parameters.AddWithValue("@TeacherFname", newTeacher.TeacherFname);
-            cmd.Parameters.AddWithValue("@TeacherLname", newTeacher.TeacherLname);
-            cmd.Parameters.AddWithValue("@EmployeeNumber", newTeacher.EmployeeNumber);
-            cmd.Parameters.AddWithValue("@HireDate", newTeacher.HireDate);
-            cmd.Parameters.AddWithValue("@Salary", newTeacher.Salary);
-            cmd.Prepare();
+                // SQL Query - insert particular teacher record to teachers table
+                cmd.CommandText = "INSERT INTO teachers (teacherfname, teacherlname, employeenumber, hiredate, salary) VALUES (@TeacherFname, @TeacherLname, @EmployeeNumber, @HireDate, @Salary); SELECT LAST_INSERT_ID()";
+                cmd.Parameters.AddWithValue("@TeacherFname", newTeacher.TeacherFname);
+                cmd.Parameters.AddWithValue("@TeacherLname", newTeacher.TeacherLname);
+                cmd.Parameters.AddWithValue("@EmployeeNumber", newTeacher.EmployeeNumber);
+                cmd.Parameters.AddWithValue("@HireDate", newTeacher.HireDate);
+                cmd.Parameters.AddWithValue("@Salary", newTeacher.Salary);
+                cmd.Prepare();
 
-            // GET the teacher ID that's inserted
-            int insertedTeacherId = Convert.ToInt32(cmd.ExecuteScalar());
+                // GET the teacher ID that's inserted
+                int insertedTeacherId = Convert.ToInt32(cmd.ExecuteScalar());
 
-            // close db connection
-            Conn.Close();
+                // close db connection
+                Conn.Close();
 
-            // return teacherId, to redirect to the created teacher's profile
-            return insertedTeacherId;
+                // return teacherId, to redirect to the created teacher's profile
+                return insertedTeacherId;
+            }else
+            {
+                return 0;
+            }
         }
 
         /// <summary>
@@ -278,5 +289,58 @@ namespace SchoolProject.Controllers
             // close db connection
             Conn.Close();
         }
+
+
+        /// <summary>
+        /// Update an existing Teacher on the MySQL school Database.
+        /// </summary>
+        /// <param name="teacherInfo">An Object with fields that map to the columns of the Teacher's Table</param>
+        /// <returns>Boolean value of response, representing the operation is success or not</returns>
+        /// <example>api/TeacherDataController/UpdateTeacher/teacherInfo -> true 
+        /// Teacher teacherInfo => {
+        ///     TeacherId: 1,
+        ///     TeacherFname: "Praveen",
+        ///     TeacherLname: "R",
+        ///     EmployeeNumber: "501",
+        ///     HireDate: "8/5/2020",
+        ///     Salary: 150.5
+        /// }
+        /// <example>api/TeacherDataController/UpdateTeacher/teacherInfo -> false :- incase of validation error missing any required field
+        public Boolean UpdateTeacher(Teacher teacherInfo)
+        {
+            if (ModelState.IsValid){
+                // Create an instance of a db connection
+                MySqlConnection Conn = School.AccessDatabase();
+
+                // Open/Associate a connection between the web server and the db
+                Conn.Open();
+
+                //Establish a new command (query) for our database
+                MySqlCommand cmd = Conn.CreateCommand();
+                // SQL Query - Update existing teacher information
+                cmd.CommandText = "UPDATE teachers SET teacherfname=@TeacherFname, teacherlname=@TeacherLname, employeenumber=@EmployeeNumber, hiredate=@HireDate, salary=@Salary WHERE teacherid=@TeacherId";
+                cmd.Parameters.AddWithValue("@teacherfname", teacherInfo.TeacherFname);
+                cmd.Parameters.AddWithValue("@teacherlname", teacherInfo.TeacherLname);
+                cmd.Parameters.AddWithValue("@employeenumber", teacherInfo.EmployeeNumber);
+                cmd.Parameters.AddWithValue("@hiredate", teacherInfo.HireDate);
+                cmd.Parameters.AddWithValue("@salary", teacherInfo.Salary);
+                cmd.Parameters.AddWithValue("@teacherid", teacherInfo.TeacherId);
+
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
+
+                // close db connection
+                Conn.Close();
+
+                // validation & update success
+                return true;
+            }else
+            {
+                // validation fail
+                return false;
+            }
+        }
+
     }
 }

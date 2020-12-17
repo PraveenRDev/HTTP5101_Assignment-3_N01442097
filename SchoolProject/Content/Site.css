@@ -91,3 +91,13 @@ input[type=submit] {
 nav{
     display: flex
 }
+
+#validationError {
+    margin: 2em 0;
+    width: 30em;
+    display: none;
+    background-color: orangered;
+    color: white;
+    padding: 1em 2em;
+    text-align: center;
+}

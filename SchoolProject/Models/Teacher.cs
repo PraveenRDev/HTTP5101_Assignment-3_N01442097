@@ -18,6 +18,7 @@ namespace SchoolProject.Models
         [Required(ErrorMessage = "Enter Hire Date")]
         [DataType(DataType.Date)]
         [Display(Name = "Hire Date")]
+        [DisplayFormat(DataFormatString = "{0:yyy MM dd}")]
         public DateTime HireDate { get; set; }
 
         [Required(ErrorMessage = "Enter Salary")]
