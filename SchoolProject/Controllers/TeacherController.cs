@@ -87,5 +87,33 @@ namespace SchoolProject.Controllers
             return RedirectToAction("List");
         }
 
+        //GET : /Teacher/Update/{id}
+        public ActionResult Update(int id)
+        {
+            TeacherDataController controller = new TeacherDataController();
+            Teacher SelectedTeacher = controller.GetTeacherInformation(id);
+            return View(SelectedTeacher);
+        }
+
+        //POST : /Teacher/Update
+        [HttpPost]
+        public ActionResult Update([Bind(Include = "EmployeeNumber,HireDate,Salary,TeacherFname,TeacherLname")] Teacher teacherInfo, int TeacherId)
+        {
+            // validate the data (server-side)
+            if (ModelState.IsValid)
+            {
+                TeacherDataController controller = new TeacherDataController();
+                // Update teacher
+                teacherInfo.TeacherId = TeacherId;
+                controller.UpdateTeacher(teacherInfo);
+                // Redirect to updated teacher profile
+                return RedirectToAction($"Show/{TeacherId}");
+            }else
+            {
+                // on validation fail:- show last saved teacher information
+                return RedirectToAction($"Update/{TeacherId}");
+            }
+        }
+
     }
 }

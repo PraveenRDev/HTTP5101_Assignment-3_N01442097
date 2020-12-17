@@ -1,0 +1,38 @@
+﻿@model SchoolProject.Models.Teacher
+@{
+    ViewBag.Title = "Update";
+}
+
+<h2>Update Teacher</h2>
+<nav>
+    <a href="/Teacher/Show/@Model.TeacherId" class="btn-link">Back</a>
+</nav>
+<form method="POST" action="/Teacher/Update/@Model.TeacherId" onsubmit="return ValidateTeacher();">
+    <div class="inputGroup">
+        <input type="hidden" readonly id="TeacherId" name="TeacherId" value="@Model.TeacherId" />
+    </div>
+    <div class="inputGroup">
+        <label for="TeacherFname">First Name</label>
+        <input type="text" id="TeacherFname" name="TeacherFname" value="@Model.TeacherFname" />
+    </div>
+    <div class="inputGroup">
+        <label for="TeacherLname">Last Name</label>
+        <input type="text" id="TeacherLname" name="TeacherLname" value="@Model.TeacherLname" />
+    </div>
+    <div class="inputGroup">
+        <label for="EmployeeNumber">Employee Number</label>
+        <input type="text" id="EmployeeNumber" name="EmployeeNumber" value="@Model.EmployeeNumber" />
+    </div>
+    <div class="inputGroup">
+        <label for="HireDate">Hire Date</label>
+        <input type="date" id="HireDate" name="HireDate" value="@Model.HireDate.ToString("yyyy-MM-dd")" />
+    </div>
+    <div class="inputGroup">
+        <label for="Salary">Salary</label>
+        <input type="number" step="0.01" id="Salary" name="Salary" value="@Model.Salary" />
+    </div>
+    <div id="validationError"></div>
+    <div class="form-group">
+        <input type="submit" value="Update Teacher" class="btn btn-default" />
+    </div>
+</form>
