@@ -5,7 +5,7 @@ Features in the current version(assignment 5) are
   1. Update Functionality
   2. Client-side JS validation for Update view
   3. Server-side validation for Teacher Controller & TeacherDataController
-  4. Corrections as per Professor's suggestion on previous version 
+  4. Corrections as per Professor's suggestions on previous version 
 
 Features in the version(assignment 4) are
   1. Add functionlity.
